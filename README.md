@@ -13,17 +13,17 @@ rs-auth-ai/
 │   ├── main.rs                # Application entry point
 │   ├── errors.rs              # Error handling
 │   ├── config.rs              # Configuration management
-│   ├── db.rs                  # MongoDB connection and operations
+│   ├── db.rs                  # PostgreSQL connection and operations
 │   ├── models/                # Data models
-│   │   ├── user.rs           # User and OAuth models
+│   │   ├── mod.rs            # Models module entry
+│   │   ├── user.rs           # User models with database operations
 │   │   └── ai.rs             # AI request/response models
 │   ├── service/               # Core services
 │   │   ├── mod.rs            # Service module entry
 │   │   └── redis_service.rs  # Redis service
 │   ├── auth/                  # Authentication module
 │   │   ├── utils.rs          # JWT utilities
-│   │   ├── routes.rs         # Authentication routes
-│   │   ├── handlers.rs       # Authentication logic
+│   │   ├── auth_handlers.rs  # Authentication request handlers
 │   │   ├── oauth/            # OAuth providers
 │   │   │   ├── models.rs     # OAuth data models
 │   │   │   ├── google.rs     # Google OAuth
@@ -53,7 +53,10 @@ rs-auth-ai/
 - Modular provider interface for adding AI services (e.g., OpenAI, Claude).
 
 ### Database and Caching:
-- MongoDB for flexible storage of user and AI data.
+
+- PostgreSQL for robust relational data storage with UUID primary keys.
+- Advanced indexing for optimal query performance.
+- Connection pooling with SQLx for efficient database operations.
 - Redis for efficient caching and session management.
 
 ### Configuration:
@@ -68,7 +71,7 @@ rs-auth-ai/
 - Rust (stable, latest version)
 - Cargo
 - MongoDB
-- Redis
+- PostgreSQL 12+
 - API keys for Google and Facebook OAuth (optional)
 - Tongyi Qianwen API key (for AI features)
 

@@ -1,14 +1,16 @@
 use std::env;
 use std::collections::HashMap;
 use crate::errors::AppError;
+
 #[derive(Clone, Debug)]
 pub struct Config {
     pub server_host: String,
     pub server_port: u16,
-    pub mongodb_uri: String,
-    pub database_name: String,
+    pub database_url: String,
     pub redis_url: String,
     pub ai_providers: AIProviderConfig,
+    pub database_max_connections: u32,
+    pub database_min_connections: u32,
 }
 
 #[derive(Clone, Debug, Default)]
@@ -25,10 +27,6 @@ impl AIProviderConfig {
 
     pub fn get_provider_config(&self, provider: &str) -> Option<&HashMap<String, String>> {
         self.providers.get(provider)
-    }
-
-    pub fn get_config_value(&self, provider: &str, key: &str) -> Option<&String> {
-        self.providers.get(provider).and_then(|config| config.get(key))
     }
 
     pub fn load_from_env(&mut self, provider: &str, config_keys: &[&str]) {
@@ -49,8 +47,6 @@ impl Config {
     pub fn from_env() -> Result<Self, AppError> {
         let mut ai_providers = AIProviderConfig::new();
         
-        // 示例：加载通义千问配置
-        // 可以根据需要加载其他提供商的配置
         ai_providers.load_from_env("tongyi", &["API_KEY", "API_ENDPOINT"]);
         ai_providers.load_from_env("openai", &["API_KEY", "API_ENDPOINT"]);
 
@@ -60,13 +56,20 @@ impl Config {
                 .unwrap_or_else(|_| "8080".to_string())
                 .parse()
                 .map_err(|_| AppError::ConfigError("无效的服务器端口".to_string()))?,
-            mongodb_uri: env::var("MONGODB_URI").map_err(|_| {
-                AppError::ConfigError("MONGODB_URI 环境变量未设置".to_string())
+            
+            database_url: env::var("DATABASE_URL").map_err(|_| {
+                AppError::ConfigError("DATABASE_URL 环境变量未设置".to_string())
             })?,
-            database_name: env::var("DATABASE_NAME").map_err(|_| {
-                AppError::ConfigError("DATABASE_NAME 环境变量未设置".to_string())
-            })?,
-            redis_url: env::var("REDIS_URL").unwrap_or_else(|_| "redis://127.0.0.1:6380".to_string()),
+            database_max_connections: env::var("DATABASE_MAX_CONNECTIONS")
+                .unwrap_or_else(|_| "10".to_string())
+                .parse()
+                .map_err(|_| AppError::ConfigError("无效的数据库最大连接数".to_string()))?,
+            database_min_connections: env::var("DATABASE_MIN_CONNECTIONS")
+                .unwrap_or_else(|_| "1".to_string())
+                .parse()
+                .map_err(|_| AppError::ConfigError("无效的数据库最小连接数".to_string()))?,
+            
+            redis_url: env::var("REDIS_URL").unwrap_or_else(|_| "redis://127.0.0.1:6379".to_string()),
             ai_providers,
         })
     }

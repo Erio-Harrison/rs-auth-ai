@@ -31,7 +31,7 @@ pub fn verify_password(password: &str, hash: &str) -> Result<bool, AppError> {
 pub fn generate_jwt(user_id: &str) -> Result<String, AppError> {
     let jwt_secret = env::var("JWT_SECRET").expect("JWT_SECRET must be set");
     let expiration = env::var("JWT_EXPIRATION")
-        .unwrap_or_else(|_| "604800".to_string()) // 默认7天 (7*24*60*60)
+        .unwrap_or_else(|_| "604800".to_string()) 
         .parse::<i64>()
         .unwrap_or(604800);
     
