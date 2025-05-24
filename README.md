@@ -1,5 +1,8 @@
 # rs-auth-ai
-A Rust-based template project by [Erio-Harrison](https://github.com/Erio-Harrison) for building applications with user authentication and AI-powered features. It offers a modular, extensible architecture with JWT-based authentication, OAuth (Google and Facebook), and AI integration (currently supporting Tongyi Qianwen, with easy expansion to other providers). The project uses MongoDB for data storage and Redis for caching/session management, designed for rapid development and scalability.
+
+This is a Rust-based template project created by [Erio-Harrison](https://github.com/Erio-Harrison) for developing applications with user authentication and AI-powered functionality. It features a modular and extensible architecture, supporting JWT-based authentication, OAuth (Google and Facebook), and AI integration (currently compatible with Tongyi Qianwen, with flexibility to add other providers easily).  
+
+For data storage, the project originally used MongoDB (available in the [mongodb-version](https://github.com/Erio-Harrison/rs-auth-ai/tree/mongodb-version) branch) but has since migrated to PostgreSQL. It also utilizes Redis for caching and session management. Designed for rapid development and scalability, this template provides a robust foundation for building secure, AI-enhanced applications.  
 
 ## API Documentation
 Detailed API documentation is available in:
@@ -160,7 +163,7 @@ Key dependencies (see Cargo.toml for details):
 5. Open a pull request.
 
 ## License
-MIT License. See LICENSE file for details.
+MIT License. See [LICENSE](./LICENSE) file for details.
 
 ## Contact
 For issues or feedback, open an issue on GitHub or contact [Erio-Harrison](https://github.com/Erio-Harrison).
